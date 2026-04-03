@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  tcamt-webapp:
+    image: tcamt-prm/tcamt-webapp:latest
+    container_name: tcamt-webapp
+    ports:
+      - "8096:8080"
+    depends_on:
+      - tcamt-mysql
+      - tcamt-mongo
+    environment:
+      - MONGO_HOST=tcamt-mongo
+      - MONGO_PORT=27017
+      - MONGO_DBNAME=tcl
+      - jdbc.igl.auth.url=jdbc:mysql://tcamt-mysql:3306/igl?useUnicode=TRUE&characterEncoding=UTF-8
+      - jdbc.igl.auth.username=igl-admin
+      - jdbc.igl.auth.password=
+      - jdbc.igl.auth.testWhileIdle=true
+      - jdbc.igl.auth.testOnBorrow=true
+      - jdbc.igl.auth.validationQuery=SELECT 1
+
+      - hibernate.hbm2ddl.auto=validate
+      - hibernate.dialect=
+      - hibernate.globally_quoted_identifiers=false
+      - hibernate.cache.use_second_level_cache=true
+      - hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory
+      - hibernate.cache.use_query_cache=true
+      - hibernate.generate_statistics=true
+      - connect.apps=GVT|https://hl7v2-gvt.nist.gov/gvt/;GVT-DEV|https://gvt-dev.nist.gov/gvt/;IZ-TOOL-DEV|https://hit-dev.nist.gov:8098/iztool/;IZ-TOOL|https://hl7v2-iz-r1.5-testing.nist.gov/iztool/
+
+    volumes:
+      - ./logs/tcamt-webapp:/usr/local/tomcat/logs
+      - ./context.xml:/usr/local/tomcat/conf/context.xml
+
+  tcamt-mongo:
+    image: mongo:4.4.29-focal
+    container_name: tcamt-mongo
+    volumes:
+      - ./database/logs:/var/log/mongodb/
+      - ./database/db:/data/db
+      - ./database/config:/data/configdb
+
+  tcamt-mysql:
+    image: mysql:8.0.30
+    container_name: tcamt-mysql
+    environment:
+      - MYSQL_DATABASE=igl
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    ports:
+      - "3379:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+
+  # Angular / Grunt dev server — proxies /api and Spring Security to Tomcat (/tcamt context)
+  tcamt-client:
+    build:
+      context: ../tcamt-lite-client
+      dockerfile: Dockerfile
+    image: tcamt-prm/tcamt-client:deploy
+    platform: linux/amd64
+    ports:
+      - "9000:9000"
+      - "35729:35729"
+    environment:
+      GRUNT_CONNECT_HOSTNAME: "0.0.0.0"
+      GRUNT_NO_OPEN: "1"
+      CHOKIDAR_USEPOLLING: "1"
+      TCAMT_BACKEND_URL: "http://tcamt-webapp:8080"
+      TCAMT_CONTEXT_PATH: "tcamt"
+    depends_on:
+      - tcamt-webapp
+    volumes:
+      - tcamt_client_node_modules:/app/node_modules
+      - tcamt_client_bower:/app/bower_components
+
+volumes:
+  tcamt_client_node_modules:
+  tcamt_client_bower:

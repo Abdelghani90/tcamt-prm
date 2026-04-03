@@ -1,0 +1,3 @@
+CREATE USER 'igl-admin'@'%' IDENTIFIED BY '';
+GRANT ALL PRIVILEGES ON igl.* TO 'igl-admin'@'%';
+FLUSH PRIVILEGES;

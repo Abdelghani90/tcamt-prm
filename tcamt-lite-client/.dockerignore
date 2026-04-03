@@ -1,0 +1,10 @@
+node_modules
+bower_components
+.tmp
+dist
+.git
+.gitignore
+**/.DS_Store
+*.log
+npm-debug.log*
+.cursor

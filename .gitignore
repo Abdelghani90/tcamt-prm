@@ -1,0 +1,30 @@
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Cursor (local; do not commit)
+.cursor/
+**/.cursor/
+.cursorrules
+.cursorignore
+
+# Java / Maven
+**/target/
+.classpath
+.project
+.settings/
+/bin/
+
+# Frontend
+tcamt-lite-client/.idea/
+tcamt-lite-client/bower_components/
+tcamt-lite-client/node_modules/
+tcamt-lite-client/.sass-cache/
+tcamt-lite-client/.tmp/
+
+# Local deploy data (do not commit DB or logs)
+tcamt-deploy/mysql/data/
+tcamt-deploy/logs/
+tcamt-deploy/database/db/
+tcamt-deploy/database/logs/

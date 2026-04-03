@@ -1,0 +1,45 @@
+# Usage:
+#   docker compose up tcamt-client --build
+#     Image + named volumes (no host bind). Good for published image / CI.
+#   docker compose up tcamt-client-dev --build
+#     Binds current directory for live edit; node_modules + bower_components use Docker volumes
+#     so missing gitignored bower_components on the host is OK.
+#
+# Refresh deps after package.json / bower.json changes:
+#   docker compose down -v && docker compose up tcamt-client --build
+
+services:
+  tcamt-client:
+    build: .
+    image: tcamt-prm/tcamt-client:dev
+    platform: linux/amd64
+    ports:
+      - "9000:9000"
+      - "35729:35729"
+    environment:
+      GRUNT_CONNECT_HOSTNAME: "0.0.0.0"
+      GRUNT_NO_OPEN: "1"
+      CHOKIDAR_USEPOLLING: "1"
+    volumes:
+      - tcamt_node_modules:/app/node_modules
+      - tcamt_bower_components:/app/bower_components
+
+  tcamt-client-dev:
+    build: .
+    image: tcamt-prm/tcamt-client:dev
+    platform: linux/amd64
+    ports:
+      - "9000:9000"
+      - "35729:35729"
+    environment:
+      GRUNT_CONNECT_HOSTNAME: "0.0.0.0"
+      GRUNT_NO_OPEN: "1"
+      CHOKIDAR_USEPOLLING: "1"
+    volumes:
+      - .:/app
+      - tcamt_node_modules:/app/node_modules
+      - tcamt_bower_components:/app/bower_components
+
+volumes:
+  tcamt_node_modules:
+  tcamt_bower_components:

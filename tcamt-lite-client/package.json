@@ -1,0 +1,66 @@
+{
+  "name": "tcl",
+  "version": "0.0.0",
+  "dependencies": {
+    "bower": "^1.3.9",
+    "bower-installer": "git+https://github.com/bessdsv/bower-installer.git#temp",
+    "imagemin": "^4.0.0",
+    "natives": "^1.1.4"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-autoprefixer": "^0.7.3",
+    "grunt-cli": "^1.3.2",
+    "grunt-compass": "^0.3.9",
+    "grunt-concurrent": "^0.5.0",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-compass": "^0.7.2",
+    "grunt-contrib-concat": "^0.4.0",
+    "grunt-contrib-connect": "^0.7.1",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-cssmin": "^0.9.0",
+    "grunt-contrib-htmlmin": "^0.3.0",
+    "grunt-contrib-imagemin": "^1.0.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-uglify": "^0.4.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-filerev": "^0.2.1",
+    "grunt-google-cdn": "^0.4.0",
+    "grunt-include-source": "^0.7.1",
+    "grunt-karma": "^0.12.0",
+    "grunt-newer": "^0.7.0",
+    "grunt-ng-annotate": "0.10.0",
+    "grunt-shell": "^1.1.0",
+    "grunt-svgmin": "^0.4.0",
+    "grunt-usemin": "^2.1.1",
+    "grunt-wiredep": "^1.7.0",
+    "http-proxy": "^1.18.1",
+    "jasmine-core": "~2.1.3",
+    "jshint-stylish": "^0.2.0",
+    "karma": "^0.13.19",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-jasmine": "^0.3.6",
+    "karma-jasmine-jquery": "^0.1.1",
+    "karma-phantomjs-launcher": "~0.1.4",
+    "load-grunt-tasks": "^0.4.0",
+    "sass": "^1.49.11",
+    "time-grunt": "^0.3.1"
+  },
+  "engines": {
+    "node": "13.12.0",
+    "npm": "6.14.4"
+  },
+  "scripts": {
+    "test": "grunt test",
+    "preinstall": "npx npm-force-resolutions",
+    "docker:build": "docker build -t tcamt-prm/tcamt-client:dev .",
+    "docker:up": "docker compose up tcamt-client --build",
+    "docker:up:dev": "docker compose up tcamt-client-dev --build",
+    "docker:down": "docker compose down",
+    "docker:clean-volumes": "docker compose down -v",
+    "docker:run": "docker run --rm -p 9000:9000 -p 35729:35729 -v tcamt_prm_client_node_modules:/app/node_modules -v tcamt_prm_client_bower:/app/bower_components tcamt-prm/tcamt-client:dev"
+  },
+  "resolutions": {
+    "graceful-fs": "4.2.3"
+  }
+}
